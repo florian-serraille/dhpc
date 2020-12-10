@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Transactional
@@ -35,14 +36,14 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public void addRoleToUser(final String username, final String roleName) {
 		
-		final AppUser user = userRepository.findByUsername(username);
-		final AppRole role = roleRepository.findByRoleName(roleName);
+		final AppUser user = userRepository.findByUsername(username).orElseThrow(ResourceNorFoundException::new);
+		final AppRole role = roleRepository.findByRoleName(roleName).orElseThrow(ResourceNorFoundException::new);
 		
 		user.getAppRoles().add(role);
 	}
 	
 	@Override
-	public AppUser findUserByName(final String username) {
+	public Optional<AppUser> findUserByName(final String username) {
 		return userRepository.findByUsername(username);
 	}
 	
